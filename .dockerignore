@@ -1,0 +1,47 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# Build directories
+build/
+builds/
+bin/
+libs/
+*.o
+*.so
+*.a
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation and non-essential files
+doc/
+*.md
+LICENSE
+
+# Data files (should be mounted as volumes)
+vp_data/
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.jpg
+*.jpeg
+*.png
+
+# Temporary files
+*.tmp
+*.log
+*.cache
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+*.sh

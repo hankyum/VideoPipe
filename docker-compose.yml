@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  videopipe2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: videopipe2:latest
+    container_name: videopipe2_dev
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - DISPLAY=${DISPLAY:-host.docker.internal:0}
+    volumes:
+      # Mount project directory for development
+      - .:/workspace/VideoPipe2
+      # Mount for X11 display (if needed for GUI)
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # Mount for persistent build directory
+      - videopipe2_build:/workspace/VideoPipe2/build
+      # Mount for model data (optional)
+      - ${VP_DATA_PATH:-./vp_data}:/workspace/vp_data
+    working_dir: /workspace/VideoPipe2
+    network_mode: host
+    privileged: true
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+volumes:
+  videopipe2_build:
+    name: videopipe2_build

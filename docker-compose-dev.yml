@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  videopipe2-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: videopipe2:dev
+    container_name: videopipe2_dev
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - DISPLAY=${DISPLAY:-host.docker.internal:0}
+      # CMake options
+      - VP_WITH_CUDA=ON
+      - VP_WITH_TRT=OFF
+      - VP_WITH_PADDLE=OFF
+      - VP_WITH_KAFKA=OFF
+      - VP_WITH_LLM=OFF
+      - VP_WITH_FFMPEG=OFF
+      - VP_BUILD_COMPLEX_SAMPLES=OFF
+    volumes:
+      # Mount entire project for live development
+      - .:/workspace/VideoPipe2
+      # X11 for GUI applications
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # Persistent build artifacts
+      - videopipe2_build:/workspace/VideoPipe2/build
+      # Model and test data
+      - ${VP_DATA_PATH:-./vp_data}:/workspace/vp_data
+    working_dir: /workspace/VideoPipe2
+    network_mode: host
+    privileged: true
+    stdin_open: true
+    tty: true
+    command: /bin/bash -c "echo 'VideoPipe2 Development Container Ready!' && /bin/bash"
+
+volumes:
+  videopipe2_build:
+    name: videopipe2_build
